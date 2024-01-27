@@ -1,0 +1,5 @@
+modelscope
+requests
+tensorflow
+torch
+tqdm
