@@ -24,7 +24,7 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
         images = (re.findall(re2, response.text))
         for image in images:
             image_url = f'https://www.nanosats.eu/img/sat/{image[0]}.{image[1]}'
-            open(f'images/{image[0]}.{image[1]}', 'wb+').write(requests.get(image_url, headers = headers).content)
+            open(f'images/{image[0]}.{image[1]}', 'wb').write(requests.get(image_url, headers = headers).content)
             contentPro += f'#figure(image("images/{image[0]}.{image[1]}"), caption: [{image[0]}.{image[1]}])\n'
 
 input_sequence = '<SENT_SPLIT>'.join(descriptions)
