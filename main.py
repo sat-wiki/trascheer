@@ -14,22 +14,18 @@ descriptions = []
 
 contentPro = ''
 
-def get_information(html):
-    description = re1.search(html).group(2).replace("  ", "").replace("<p>", "").replace("</p>", "")
-    descriptions.append(description)
-    global contentPro += f'== {row["Value"]}\n\n\u0023table([*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
-
-    images = (re.findall(re2, html))
-    for image in images:
-        image_url = f'https://www.nanosats.eu/img/sat/{image[0]}.{image[1]}'
-        open(f'images/{image[0]}.{image[1]}', 'wb+').write(requests.get(image_url, headers = headers).content)
-        global contentPro += f'#figure(image("images/{image[0]}.{image[1]}"), caption: [{image[0]}.{image[1]}])\n'
-
 with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
     for row in tqdm(spamreader):
         response = requests.get(row['Link_full'], headers = headers)
-        get_information(response.text)
+        description = re1.search(response.text).group(2).replace("  ", "").replace("<p>", "").replace("</p>", "")
+        descriptions.append(description)
+        contentPro += f'== {row["Value"]}\n\n\u0023table([*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
+        images = (re.findall(re2, response.text))
+        for image in images:
+            image_url = f'https://www.nanosats.eu/img/sat/{image[0]}.{image[1]}'
+            open(f'images/{image[0]}.{image[1]}', 'wb+').write(requests.get(image_url, headers = headers).content)
+            contentPro += f'#figure(image("images/{image[0]}.{image[1]}"), caption: [{image[0]}.{image[1]}])\n'
 
 input_sequence = '<SENT_SPLIT>'.join(descriptions)
 pipeline_ins = pipeline(task = Tasks.translation, model = "damo/nlp_csanmt_translation_en2zh")
