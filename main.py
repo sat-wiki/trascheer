@@ -17,14 +17,12 @@ contentPro = ''
 def get_information(html):
     description = re1.search(html).group(2).replace("  ", "").replace("<p>", "").replace("</p>", "")
     descriptions.append(description)
-    print(f'=== {row["Value"]} ===\n\n{description}\n', file = open('content.typ', 'a+'))
-    global contentPro += f'=== {row["Value"]} ===\n\n#table(columns: (3fr, 2fr), align: horizon, [*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
+    global contentPro += f'== {row["Value"]}\n\n\u0023table([*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
 
     images = (re.findall(re2, html))
     for image in images:
         image_url = f'https://www.nanosats.eu/img/sat/{image[0]}.{image[1]}'
         open(f'images/{image[0]}.{image[1]}', 'wb+').write(requests.get(image_url, headers = headers).content)
-        print(f'#figure(image("images/{image[0]}.{image[1]}"), caption: [{image[0]}.{image[1]}])\n', file = open('content.typ', 'a+'))
         global contentPro += f'#figure(image("images/{image[0]}.{image[1]}"), caption: [{image[0]}.{image[1]}])\n'
 
 with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
@@ -39,4 +37,4 @@ outputs = pipeline_ins(input = input_sequence)
 
 for translation in tqdm(outputs['translation'].split('<SENT_SPLIT>')):
     contentPro.replace('Translationcky', translation, 1)
-print(contentPro, file = open('contentPro.typ', 'w+'))
+print(contentPro, file = open('contentPro.typ', 'a'))

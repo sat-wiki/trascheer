@@ -13,16 +13,14 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - run: pip install -r requirements.txt
-      - uses: typst-community/setup-typst@v3
+      - uses: typst-community/setup-typst@v3.0.0
+      - uses: RisingInIris2017/cjk-fonts-action@v1.0.7
       - run: python main.py
-      - run: typst compile content.typ content.pdf
       - run: typst compile contentPro.typ contentPro.pdf
       - uses: actions/upload-artifact@v4
         with:
           path: |
             images/
-            content.typ
             contentPro.typ
-            content.pdf
             contentPro.pdf
           compression-level: 6
