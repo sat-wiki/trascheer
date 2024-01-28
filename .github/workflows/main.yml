@@ -25,4 +25,5 @@ jobs:
             images/
             contentPro.typ
             contentPro.pdf
+            content.wikitext
           compression-level: 6

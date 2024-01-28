@@ -5,7 +5,7 @@ import re
 import requests
 from tqdm import tqdm
 
-re1 = re.compile(r'<td style="text-align:left" id="(.*)">\s*<p>(.*?)</p>\s*</td>', re.DOTALL)
+re1 = re.compile(r'<td style="text-align:left" id="c24">(.*?)</td>', re.DOTALL)
 re2 = re.compile(r'href="\.\./img/sat/([a-zA-Z\-_0-9]*)\.([a-zA-Z]*)"', re.DOTALL)
 
 headers = {"User-Agent": "Mozilla/5.0 (iPad; CPU OS 16_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/120.0.2210.150 Version/16.0 Mobile/15E148 Safari/604.1"}
@@ -18,8 +18,8 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
     for row in tqdm(spamreader):
         response = requests.get(row['Link_full'], headers = headers)
-        description = re1.search(response.text).group(2).replace("  ", "").replace("<p>", "").replace("</p>", "")
-        descriptions.append(description)
+        cyberdescription = re1.search(response.text).group(2).replace("      ", "").replace("<p>", "").replace("</p>", "").replace("<ul>", "").replace("</ul>", "").replace("  <li>", "- ").replace("</li>", "")
+        description = cyberdescription.replace("<b>", "*").replrep("</b>", "*").replace("<i>", "_").replace("</i>", "_")
         contentPro += f'== {row["Value"]}\n\n\u0023table([*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
         images = (re.findall(re2, response.text))
         for image in images:
@@ -34,3 +34,6 @@ outputs = pipeline_ins(input = input_sequence)
 for translation in tqdm(outputs['translation'].split('<SENT_SPLIT>')):
     contentPro.replace('Translationcky', translation, 1)
 print(contentPro, file = open('contentPro.typ', 'a'))
+
+wikiDescription = contentPro.replace("*", "'''").replrep("_", "''")
+print(wikiDescription, file = open('content.wikitext', 'w'))
