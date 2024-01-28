@@ -18,7 +18,7 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
     for row in tqdm(spamreader):
         response = requests.get(row['Link_full'], headers = headers)
-        cyberdescription = re1.search(response.text).group(2).replace("      ", "").replace("<p>", "").replace("</p>", "").replace("<ul>", "").replace("</ul>", "").replace("  <li>", "- ").replace("</li>", "")
+        cyberdescription = re1.search(response.text).group(1).replace("      ", "").replace("<p>", "").replace("</p>", "").replace("<ul>", "").replace("</ul>", "").replace("  <li>", "- ").replace("</li>", "")
         description = cyberdescription.replace("<b>", "*").replrep("</b>", "*").replace("<i>", "_").replace("</i>", "_")
         contentPro += f'== {row["Value"]}\n\n\u0023table([*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
         images = (re.findall(re2, response.text))
