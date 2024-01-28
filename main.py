@@ -19,7 +19,7 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     for row in tqdm(spamreader):
         response = requests.get(row['Link_full'], headers = headers)
         cyberdescription = re1.search(response.text).group(1).replace("      ", "").replace("<p>", "").replace("</p>", "").replace("<ul>", "").replace("</ul>", "").replace("  <li>", "- ").replace("</li>", "")
-        description = cyberdescription.replace("<b>", "*").replrep("</b>", "*").replace("<i>", "_").replace("</i>", "_")
+        description = cyberdescription.replace("<b>", "*").replace("</b>", "*").replace("<i>", "_").replace("</i>", "_")
         contentPro += f'== {row["Value"]}\n\n\u0023table([*原文*], [*中文翻译*], [{description}], [Translationcky])\n'
         images = (re.findall(re2, response.text))
         for image in images:
@@ -35,5 +35,5 @@ for translation in tqdm(outputs['translation'].split('<SENT_SPLIT>')):
     contentPro.replace('Translationcky', translation, 1)
 print(contentPro, file = open('contentPro.typ', 'a'))
 
-wikiDescription = contentPro.replace("*", "'''").replrep("_", "''")
+wikiDescription = contentPro.replace("*", "'''").replace("_", "''")
 print(wikiDescription, file = open('content.wikitext', 'w'))
