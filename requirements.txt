@@ -1,7 +1,6 @@
 filetype
-modelscope
 requests
-tensorflow
+sentencepiece
 torch
 transformers
 tqdm
