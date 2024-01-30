@@ -27,8 +27,6 @@ translation = pipeline('translation_xx_to_yy', model = model, tokenizer = tokeni
 
 print('loaded model!')
 
-test = 0
-
 with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
     for row in tqdm(spamreader):
@@ -53,9 +51,6 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
                     print(f'Unable to insert {image[0]}.{image[1]}!', file = open('stare.txt', 'a'))
             except Exception as e:
                 print(f'Unable to insert {image[0]}.{image[1]} with error {e}!', file = open('stare.txt', 'a'))
-        test += 1
-        if test > 25:
-            break
 
 print(descriptions, file = open('contentPro.list', 'w'))
 print(contentPro, file = open('contentPro.typ', 'a'))
