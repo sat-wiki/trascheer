@@ -38,7 +38,7 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
             mass = (mass if mass != reNotFound else '')
             oneliner = re3.findall(response.text)[0]
             if oneliner != reNotFound:
-                onelinerCN = translation(oneliner.replace('--newline--', '\n')[0]["translation_text"]
+                onelinerCN = translation(oneliner.replace('--newline--', '\n'))[0]["translation_text"]
             else:
                 oneliner, onelinerCN = '', ''
             description = re4.findall(response.text)
