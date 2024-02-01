@@ -49,5 +49,5 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
             print(theLine, file = open('output.csv', 'a'))
         except Exception as e:
             print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
-        if text >= 20:
+        if test >= 20:
             sys.exit()
