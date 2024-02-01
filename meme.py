@@ -28,7 +28,8 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
     test = 0
     for row in tqdm(spamreader):
-        try:
+        # try:
+        if True:
             response = requests.get(row['Link_full'], headers = headers)
             unit = re1.findall(response.text)[0]
             unit = (unit if unit != reNotFound else '')
@@ -47,7 +48,8 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
                 description, descriptionCN = '', ''
             theLine = f'{row["Mission name"]} 6cky6 {unit} 6cky6 {mass} 6cky6 {oneliner} 6cky6 {onelinerCN} 6cky6 {description} 6cky6 {descriptionCN}'.replace('\n', ' 8cky8 ')
             print(theLine, file = open('output.csv', 'a'))
-        except Exception as e:
-            print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
-        if test >= 20:
+        # except Exception as e:
+        #     print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
+        test += 1
+        if test >= 1:
             sys.exit()
