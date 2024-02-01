@@ -8,9 +8,9 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-re1 = re.compile(r'                    <th><b>Units or mass</b></th>--newline--                    <td>--newline--                      <p>(.*?)</p>--newline--                    </td>', re.DOTALL)
-re2 = re.compile(r'                    <th><b>Mass in kg</b></th>--newline--                    <td>--newline--                      <p>(.*?)</p>--newline--                    </td>', re.DOTALL)
-re3 = re.compile(r'                    <th><b>Oneliner</b></th>--newline--                    <td>--newline--                      <p>(.*?)</p>--newline--                    </td>', re.DOTALL)
+re1 = re.compile(r'<th><b>Units or mass</b></th>--newline-- *<td>--newline-- *<p>(.*)</p>--newline-- *</td>', re.DOTALL)
+re2 = re.compile(r'<th><b>Mass in kg</b></th>--newline-- *<td>--newline-- *<p>(.*)</p>--newline-- *</td>', re.DOTALL)
+re3 = re.compile(r'<th><b>Oneliner</b></th>--newline-- *<td>--newline-- *<p>(.*)</p>--newline-- *</td>', re.DOTALL)
 re4 = re.compile(r'<td style="text-align:left" id="c24">(.*?)</td>', re.DOTALL)
 reNotFound = re1.findall('Hello!')
 
@@ -32,18 +32,20 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
         if True:
             response = requests.get(row['Link_full'], headers = headers)
             piano = response.text.replace('\n', '--newline--')
-            unit = re1.findall(response.text)[0]
-            unit = (unit if unit != reNotFound else '')
-            mass = re2.findall(response.text)[0]
-            mass = (mass if mass != reNotFound else '')
-            oneliner = re3.findall(response.text)[0]
+            unit = re1.findall(response.text)
+            unit = (unit[0] if unit != reNotFound else '')
+            mass = re2.findall(response.text)
+            mass = (mass[0] if mass != reNotFound else '')
+            oneliner = re3.findall(response.text)
             if oneliner != reNotFound:
+                oneliner = oneliner[0]
                 onelinerCN = translation(oneliner.replace('--newline--', '\n'))[0]["translation_text"]
             else:
                 oneliner, onelinerCN = '', ''
             description = re4.findall(response.text)
             if description != reNotFound:
-                description = (description[0] if type(description) == type([]) else description)[0]
+                description = description[0]
+                description = description[0] if type(description) != type('abc') else description
                 descriptionCN = translation(description.replace('--newline--', '\n'), max_length = 2000)[0]["translation_text"]
             else:
                 description, descriptionCN = '', ''
