@@ -8,9 +8,9 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-re1 = re.compile(r'                    <th><b>Units or mass</b></th>\n                    <td>\n                      <p>(.*?)</p>\n                    </td>', re.DOTALL)
-re2 = re.compile(r'                    <th><b>Mass in kg</b></th>\n                    <td>\n                      <p>(.*?)</p>\n                    </td>', re.DOTALL)
-re3 = re.compile(r'                    <th><b>Oneliner</b></th>\n                    <td>\n                      <p>(.*?)</p>\n                    </td>', re.DOTALL)
+re1 = re.compile(r'                    <th><b>Units or mass</b></th>--newline--                    <td>--newline--                      <p>(.*?)</p>--newline--                    </td>', re.DOTALL)
+re2 = re.compile(r'                    <th><b>Mass in kg</b></th>--newline--                    <td>--newline--                      <p>(.*?)</p>--newline--                    </td>', re.DOTALL)
+re3 = re.compile(r'                    <th><b>Oneliner</b></th>--newline--                    <td>--newline--                      <p>(.*?)</p>--newline--                    </td>', re.DOTALL)
 re4 = re.compile(r'<td style="text-align:left" id="c24">(.*?)</td>', re.DOTALL)
 reNotFound = re1.findall('Hello!')
 
@@ -31,22 +31,23 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
         # try:
         if True:
             response = requests.get(row['Link_full'], headers = headers)
+            piano = response.text.replace('\n', '--newline--')
             unit = re1.findall(response.text)[0]
             unit = (unit if unit != reNotFound else '')
             mass = re2.findall(response.text)[0]
             mass = (mass if mass != reNotFound else '')
             oneliner = re3.findall(response.text)[0]
             if oneliner != reNotFound:
-                onelinerCN = translation(oneliner)[0]["translation_text"]
+                onelinerCN = translation(oneliner.replace('--newline--', '\n')[0]["translation_text"]
             else:
                 oneliner, onelinerCN = '', ''
             description = re4.findall(response.text)
             if description != reNotFound:
                 description = (description[0] if type(description) == type([]) else description)[0]
-                onelinerCN = translation(oneliner)[0]["translation_text"]
+                descriptionCN = translation(description.replace('--newline--', '\n'), max_length = 2000)[0]["translation_text"]
             else:
                 description, descriptionCN = '', ''
-            theLine = f'{row["Mission name"]} 6cky6 {unit} 6cky6 {mass} 6cky6 {oneliner} 6cky6 {onelinerCN} 6cky6 {description} 6cky6 {descriptionCN}'.replace('\n', ' 8cky8 ')
+            theLine = f'{row["Mission name"]} 6cky6 {unit} 6cky6 {mass} 6cky6 {oneliner} 6cky6 {onelinerCN} 6cky6 {description} 6cky6 {descriptionCN}'.replace('--newline--', ' 8cky8 ').replace('\n', ' 8cky8 ')
             print(theLine, file = open('output.csv', 'a'))
         # except Exception as e:
         #     print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
