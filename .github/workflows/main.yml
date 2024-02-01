@@ -17,9 +17,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: |
-            images/
             stare.txt
-            contentPro.list
-            contentPro.typ
-            content.wikitext
-          compression-level: 6
+            output.csv
