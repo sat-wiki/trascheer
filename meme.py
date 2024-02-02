@@ -33,9 +33,15 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
             response = requests.get(row['Link_full'], headers = headers)
             piano = response.text.replace('\n', '--newline--')
             unit = re1.findall(response.text)
-            unit = (unit[0] if unit != reNotFound else '')
+            if unit != reNotFound:
+                unit = unit[0]
+            else:
+                unit = ''
             mass = re2.findall(response.text)
-            mass = (mass[0] if mass != reNotFound else '')
+            if mass != reNotFound:
+                mass = mass[0]
+            else:
+                mass = ''
             oneliner = re3.findall(response.text)
             if oneliner != reNotFound:
                 oneliner = oneliner[0]
@@ -45,7 +51,8 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
             description = re4.findall(response.text)
             if description != reNotFound:
                 description = description[0]
-                description = description[0] if type(description) != type('abc') else description
+                if type(description) != type('abc'):
+                    description = description[0]
                 descriptionCN = translation(description.replace('--newline--', '\n'), max_length = 2000)[0]["translation_text"]
             else:
                 description, descriptionCN = '', ''
@@ -54,5 +61,5 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
         # except Exception as e:
         #     print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
         test += 1
-        if test >= 1:
+        if test >= 10:
             sys.exit()
