@@ -28,8 +28,7 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
     test = 0
     for row in tqdm(spamreader):
-        # try:
-        if True:
+        try:
             response = requests.get(row['Link_full'], headers = headers)
             piano = response.text.replace('\n', '--newline--')
             unit = re1.findall(response.text)
@@ -45,7 +44,10 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
             oneliner = re3.findall(response.text)
             if oneliner != reNotFound:
                 oneliner = oneliner[0]
-                onelinerCN = translation(oneliner.replace('--newline--', '\n'))[0]["translation_text"]
+                try:
+                    onelinerCN = translation(oneliner.replace('--newline--', '\n'))[0]["translation_text"]
+                except Exception as e:
+                    onelinerCN = '英文过长，大模型表示拒绝工作 qwq'
             else:
                 oneliner, onelinerCN = '', ''
             description = re4.findall(response.text)
@@ -53,13 +55,16 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
                 description = description[0]
                 if type(description) != type('abc'):
                     description = description[0]
-                descriptionCN = translation(description.replace('--newline--', '\n'), max_length = 2000)[0]["translation_text"]
+                try:
+                    descriptionCN = translation(description.replace('--newline--', '\n'))[0]["translation_text"]
+                except Exception as e:
+                    descriptionCN = '英文过长，大模型表示拒绝工作 qwq'
             else:
                 description, descriptionCN = '', ''
             theLine = f'{row["Mission name"]} 6cky6 {unit} 6cky6 {mass} 6cky6 {oneliner} 6cky6 {onelinerCN} 6cky6 {description} 6cky6 {descriptionCN}'.replace('--newline--', ' 8cky8 ').replace('\n', ' 8cky8 ')
             print(theLine, file = open('output.csv', 'a'))
-        # except Exception as e:
-        #     print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
+        except Exception as e:
+            print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
         test += 1
         if test >= 10:
             sys.exit()
