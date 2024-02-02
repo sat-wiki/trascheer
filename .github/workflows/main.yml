@@ -13,13 +13,9 @@ jobs:
           python-version: '3.9'
       - run: pip install -r requirements.txt
       - run: mkdir images
-      - run: python main.py
+      - run: python meme.py
       - uses: actions/upload-artifact@v4
         with:
           path: |
-            images/
             stare.txt
-            contentPro.list
-            contentPro.typ
-            content.wikitext
-          compression-level: 6
+            output.csv
