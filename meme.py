@@ -2,6 +2,7 @@ import csv
 import re
 import requests
 import sys
+import time
 from tqdm import tqdm
 from transformers import pipeline, AutoModelWithLMHead, AutoTokenizer
 import warnings
@@ -26,7 +27,7 @@ print('model loaded!')
 
 with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
     spamreader = csv.DictReader(csvfile)
-    test = 0
+    # test = 0
     for row in tqdm(spamreader):
         try:
             response = requests.get(row['Link_full'], headers = headers)
@@ -65,6 +66,7 @@ with open('data.csv', newline = '', encoding = 'utf-8') as csvfile:
             print(theLine, file = open('output.csv', 'a'))
         except Exception as e:
             print(f'Fetch {row["Mission name"]} error with {e}!', file = open('stare.txt', 'a'))
-        test += 1
-        if test >= 10:
-            sys.exit()
+            time.sleep(5)
+        # test += 1
+        # if test >= 10:
+        #     sys.exit()
